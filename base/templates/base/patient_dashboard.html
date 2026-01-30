@@ -1,0 +1,73 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <img src="https://img.icons8.com/color/96/000000/user-male-circle--v1.png" class="mb-3" alt="Profile">
+                    <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
+                    <p class="text-muted">@{{ user.username }}</p>
+                    <hr>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'book_appointment' %}" class="btn btn-primary">📅 Book Appointment</a>
+                        <a href="{% url 'medical_history' %}" class="btn btn-info text-white">📂 Medical History</a>
+                        <a href="{% url 'patient_profile' %}" class="btn btn-outline-secondary">⚙️ Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <h3 class="mb-3">My Appointments</h3>
+            
+            {% if appointments %}
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Doctor</th>
+                                    <th>Specialization</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments %}
+                                <tr>
+                                    <td>{{ appointment.date }}</td>
+                                    <td>{{ appointment.time }}</td>
+                                    <td>Dr. {{ appointment.doctor.user.last_name }}</td>
+                                    <td>{{ appointment.specialization }}</td>
+                                    <td>
+                                        {% if appointment.status == 'Confirmed' %}
+                                            <span class="badge bg-success">Confirmed</span>
+                                        {% elif appointment.status == 'Pending' %}
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        {% elif appointment.status == 'Cancelled' %}
+                                            <span class="badge bg-danger">Cancelled</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Completed</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center animate__animated animate__fadeIn">
+                    <h4>No appointments found!</h4>
+                    <p>You haven't booked any appointments yet.</p>
+                    <a href="{% url 'book_appointment' %}" class="btn btn-primary mt-2">Book Your First Appointment</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

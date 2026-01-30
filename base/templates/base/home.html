@@ -1,0 +1,52 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+
+<div class="hero-section text-center animate__animated animate__fadeIn">
+    <div class="container">
+        <h1 class="display-3 fw-bold">Your Health, Our Priority</h1>
+        <p class="lead mb-4">Book appointments with top specialists easily and securely.</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'signup_patient' %}" class="btn btn-light btn-lg fw-bold animate__animated animate__pulse animate__infinite">Get Started</a>
+        {% else %}
+            {% if user.is_patient %}
+                <a href="{% url 'patient_dashboard' %}" class="btn btn-light btn-lg fw-bold">Go to Patient Dashboard</a>
+            {% elif user.is_doctor %}
+                <a href="{% url 'doctor_dashboard' %}" class="btn btn-light btn-lg fw-bold">Go to Doctor Dashboard</a>
+            {% elif user.is_admin or user.is_superuser %}
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-light btn-lg fw-bold">Go to Admin Dashboard</a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card p-4 h-100">
+                <div class="card-body">
+                    <h3 class="text-primary">📅 Easy Booking</h3>
+                    <p>Select your doctor, choose a time, and book instantly.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card p-4 h-100">
+                <div class="card-body">
+                    <h3 class="text-primary">📂 Medical History</h3>
+                    <p>Access your past diagnoses and prescriptions anytime.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card p-4 h-100">
+                <div class="card-body">
+                    <h3 class="text-primary">👨‍⚕️ Top Doctors</h3>
+                    <p>Highly qualified specialists available for your care.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h4>⚙️ Edit Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>First Name</label>
+                                <input type="text" name="first_name" value="{{ user.first_name }}" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Last Name</label>
+                                <input type="text" name="last_name" value="{{ user.last_name }}" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Email</label>
+                            <input type="email" name="email" value="{{ user.email }}" class="form-control">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label>Age</label>
+                                <input type="number" name="age" value="{{ patient.age }}" class="form-control">
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label>Phone Number</label>
+                                <input type="text" name="phone" value="{{ patient.phone_number }}" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Address</label>
+                            <textarea name="address" class="form-control">{{ patient.address }}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-info text-white">Update Profile</button>
+                        <a href="{% url 'patient_dashboard' %}" class="btn btn-secondary">Back</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow animate__animated animate__fadeInUp">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">📅 Book an Appointment</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Specialization Needed</label>
+                            <select id="specializationSelect" name="specialization" class="form-select" required onchange="filterDoctors()">
+                                <option value="" selected disabled>Select specialization first...</option>
+                                <option value="General">General Checkup</option>
+                                <option value="Cardiology">Cardiology</option>
+                                <option value="Dermatology">Dermatology</option>
+                                <option value="Neurology">Neurology</option>
+                                <option value="Pediatrics">Pediatrics</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Select Doctor</label>
+                            <select id="doctorSelect" name="doctor" class="form-select" required>
+                                <option value="" selected disabled>Choose a doctor...</option>
+                                {% for doctor in doctors %}
+                                    <option value="{{ doctor.user.id }}" data-spec="{{ doctor.specialization }}">
+                                        Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }} ({{ doctor.specialization }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div id="noDoctorMsg" class="text-danger mt-2" style="display:none;">
+                                <small>No doctors available for this specialization.</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date</label>
+                                <input type="date" name="date" class="form-control" min="{{ request.now|date:'Y-m-d' }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Time</label>
+                                <input type="time" name="time" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">Confirm Booking</button>
+                        <a href="{% url 'patient_dashboard' %}" class="btn btn-link w-100 mt-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterDoctors() {
+        var specSelect = document.getElementById("specializationSelect");
+        var doctorSelect = document.getElementById("doctorSelect");
+        var selectedSpec = specSelect.value;
+        var options = doctorSelect.options;
+        var found = false;
+
+        // Reset doctor selection
+        doctorSelect.value = "";
+
+        // Loop through all doctor options
+        for (var i = 1; i < options.length; i++) { // Start at 1 to skip "Choose a doctor..."
+            var doctorSpec = options[i].getAttribute("data-spec");
+            
+            // If specialization matches or matches generic "General", show it
+            if (doctorSpec === selectedSpec) {
+                options[i].style.display = "block";
+                found = true;
+            } else {
+                options[i].style.display = "none";
+            }
+        }
+
+        // Show message if no doctors found
+        var msg = document.getElementById("noDoctorMsg");
+        if (!found) {
+            msg.style.display = "block";
+        } else {
+            msg.style.display = "none";
+        }
+    }
+</script>
+{% endblock %}
